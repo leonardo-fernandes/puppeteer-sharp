@@ -128,6 +128,15 @@ public class CdpBrowser : Browser
     public override Task CloseAsync() => _closeTask ??= CloseCoreAsync();
 
     /// <inheritdoc/>
+    public override Task<CookieParam[]> CookiesAsync() => DefaultContext.CookiesAsync();
+
+    /// <inheritdoc/>
+    public override Task SetCookie(CookieParam[] cookies) => DefaultContext.SetCookie(cookies);
+
+    /// <inheritdoc/>
+    public override Task DeleteCookie(CookieParam[] cookies) => DefaultContext.DeleteCookie(cookies);
+
+    /// <inheritdoc/>
     public override async Task<IBrowserContext> CreateBrowserContextAsync(BrowserContextOptions options = null)
     {
         var response = await Connection.SendAsync<CreateBrowserContextResponse>(

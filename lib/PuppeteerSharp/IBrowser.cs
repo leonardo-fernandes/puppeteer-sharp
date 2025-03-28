@@ -156,6 +156,26 @@ namespace PuppeteerSharp
         void Disconnect();
 
         /// <summary>
+        /// Gets all cookies in the default <see cref="IBrowserContext"/>.
+        /// </summary>
+        /// <returns>Task which resolves to an array of <see cref="CookieParam"/> objects.</returns>
+        Task<CookieParam[]> CookiesAsync();
+
+        /// <summary>
+        /// Sets a cookie in the default <see cref="IBrowserContext"/>.
+        /// </summary>
+        /// <param name="cookies">Cookie to set.</param>
+        /// <returns>Task.</returns>
+        Task SetCookie(CookieParam[] cookies);
+
+        /// <summary>
+        /// Removes cookie from the default <see cref="IBrowserContext"/>.
+        /// </summary>
+        /// <param name="cookies">Cookie to remove.</param>
+        /// <returns>Task.</returns>
+        Task DeleteCookie(CookieParam[] cookies);
+
+        /// <summary>
         /// Gets the browser's original user agent.
         /// </summary>
         /// <returns>Task which resolves to the browser's original user agent.</returns>

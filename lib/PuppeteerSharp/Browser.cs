@@ -97,6 +97,15 @@ namespace PuppeteerSharp
         public abstract Task CloseAsync();
 
         /// <inheritdoc/>
+        public abstract Task<CookieParam[]> CookiesAsync();
+
+        /// <inheritdoc/>
+        public abstract Task SetCookie(CookieParam[] cookies);
+
+        /// <inheritdoc/>
+        public abstract Task DeleteCookie(CookieParam[] cookies);
+
+        /// <inheritdoc/>
         public async Task<ITarget> WaitForTargetAsync(Func<ITarget, bool> predicate, WaitForOptions options = null)
         {
             if (predicate == null)

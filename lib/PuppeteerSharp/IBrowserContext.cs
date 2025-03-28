@@ -53,6 +53,26 @@ namespace PuppeteerSharp
         Task CloseAsync();
 
         /// <summary>
+        /// Gets all cookies in the browser context.
+        /// </summary>
+        /// <returns>Task which resolves to an array of <see cref="CookieParam"/> objects.</returns>
+        Task<CookieParam[]> CookiesAsync();
+
+        /// <summary>
+        /// Sets a cookie in the browser context.
+        /// </summary>
+        /// <param name="cookies">Cookie to set.</param>
+        /// <returns>Task.</returns>
+        Task SetCookie(CookieParam[] cookies);
+
+        /// <summary>
+        /// Removes cookie in the browser context.
+        /// </summary>
+        /// <param name="cookies">Cookie to remove.</param>
+        /// <returns>Task.</returns>
+        Task DeleteCookie(CookieParam[] cookies);
+
+        /// <summary>
         /// Creates a new page.
         /// </summary>
         /// <returns>Task which resolves to a new <see cref="IPage"/> object.</returns>

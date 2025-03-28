@@ -103,5 +103,32 @@ namespace PuppeteerSharp
         /// True if cookie partition key is opaque. Supported only in Chrome.
         /// </summary>
         public bool? PartitionKeyOpaque { get; set; }
+
+        /// <summary>
+        /// Clones the cookie object.
+        /// </summary>
+        /// <returns>Returns a new <see cref="CookieParam"/> object with the same values as the current.</returns>
+        public CookieParam Clone()
+        {
+            return new CookieParam()
+            {
+                Name = this.Name,
+                Value = this.Value,
+                Url = this.Url,
+                Domain = this.Domain,
+                Path = this.Path,
+                Secure = this.Secure,
+                HttpOnly = this.HttpOnly,
+                SameSite = this.SameSite,
+                Expires = this.Expires,
+                Size = this.Size,
+                Session = this.Session,
+                Priority = this.Priority,
+                SameParty = this.SameParty,
+                SourceScheme = this.SourceScheme,
+                PartitionKey = this.PartitionKey,
+                PartitionKeyOpaque = this.PartitionKeyOpaque,
+            };
+        }
     }
 }

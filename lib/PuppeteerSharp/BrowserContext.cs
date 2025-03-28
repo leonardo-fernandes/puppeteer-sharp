@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace PuppeteerSharp
@@ -44,6 +45,23 @@ namespace PuppeteerSharp
 
         /// <inheritdoc/>
         public abstract Task CloseAsync();
+
+        /// <inheritdoc/>
+        public abstract Task<CookieParam[]> CookiesAsync();
+
+        /// <inheritdoc/>
+        public abstract Task SetCookie(CookieParam[] cookies);
+
+        /// <inheritdoc/>
+        public async Task DeleteCookie(CookieParam[] cookies)
+        {
+            await SetCookie(cookies.Select(cookie =>
+            {
+                var clone = cookie.Clone();
+                clone.Expires = 1;
+                return clone;
+            }).ToArray()).ConfigureAwait(false);
+        }
 
         /// <inheritdoc/>
         public abstract Task OverridePermissionsAsync(string origin, IEnumerable<OverridePermission> permissions);

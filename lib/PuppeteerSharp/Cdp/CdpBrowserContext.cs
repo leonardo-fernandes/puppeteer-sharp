@@ -70,6 +70,23 @@ public class CdpBrowserContext : BrowserContext
     }
 
     /// <inheritdoc/>
+    public override async Task<CookieParam[]> CookiesAsync()
+    {
+        return (await _connection.SendAsync<StorageGetCookiesResponse>("Storage.getCookies", new StorageGetCookiesRequest()
+        {
+            BrowserContextId = Id,
+        }).ConfigureAwait(false)).Cookies;
+    }
+
+    /// <inheritdoc/>
+    public override Task SetCookie(CookieParam[] cookies)
+        => _connection.SendAsync("Storage.setCookies", new StorageSetCookiesRequest()
+        {
+            BrowserContextId = Id,
+            Cookies = cookies,
+        });
+
+    /// <inheritdoc/>
     public override Task OverridePermissionsAsync(string origin, IEnumerable<OverridePermission> permissions)
         => _connection.SendAsync("Browser.grantPermissions", new BrowserGrantPermissionsRequest
         {
