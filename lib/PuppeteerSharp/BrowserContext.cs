@@ -50,12 +50,12 @@ namespace PuppeteerSharp
         public abstract Task<CookieParam[]> CookiesAsync();
 
         /// <inheritdoc/>
-        public abstract Task SetCookie(CookieParam[] cookies);
+        public abstract Task SetCookieAsync(CookieParam[] cookies);
 
         /// <inheritdoc/>
-        public async Task DeleteCookie(CookieParam[] cookies)
+        public async Task DeleteCookieAsync(CookieParam[] cookies)
         {
-            await SetCookie(cookies.Select(cookie =>
+            await SetCookieAsync(cookies.Select(cookie =>
             {
                 var clone = cookie.Clone();
                 clone.Expires = 1;

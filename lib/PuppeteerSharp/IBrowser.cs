@@ -166,14 +166,14 @@ namespace PuppeteerSharp
         /// </summary>
         /// <param name="cookies">Cookie to set.</param>
         /// <returns>Task.</returns>
-        Task SetCookie(CookieParam[] cookies);
+        Task SetCookieAsync(CookieParam[] cookies);
 
         /// <summary>
         /// Removes cookie from the default <see cref="IBrowserContext"/>.
         /// </summary>
         /// <param name="cookies">Cookie to remove.</param>
         /// <returns>Task.</returns>
-        Task DeleteCookie(CookieParam[] cookies);
+        Task DeleteCookieAsync(CookieParam[] cookies);
 
         /// <summary>
         /// Gets the browser's original user agent.

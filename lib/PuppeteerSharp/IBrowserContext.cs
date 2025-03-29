@@ -63,14 +63,14 @@ namespace PuppeteerSharp
         /// </summary>
         /// <param name="cookies">Cookie to set.</param>
         /// <returns>Task.</returns>
-        Task SetCookie(CookieParam[] cookies);
+        Task SetCookieAsync(CookieParam[] cookies);
 
         /// <summary>
         /// Removes cookie in the browser context.
         /// </summary>
         /// <param name="cookies">Cookie to remove.</param>
         /// <returns>Task.</returns>
-        Task DeleteCookie(CookieParam[] cookies);
+        Task DeleteCookieAsync(CookieParam[] cookies);
 
         /// <summary>
         /// Creates a new page.

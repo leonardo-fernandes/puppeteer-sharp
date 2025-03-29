@@ -79,7 +79,7 @@ public class CdpBrowserContext : BrowserContext
     }
 
     /// <inheritdoc/>
-    public override Task SetCookie(CookieParam[] cookies)
+    public override Task SetCookieAsync(CookieParam[] cookies)
         => _connection.SendAsync("Storage.setCookies", new StorageSetCookiesRequest()
         {
             BrowserContextId = Id,

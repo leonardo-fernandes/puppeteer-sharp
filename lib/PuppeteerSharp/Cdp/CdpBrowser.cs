@@ -131,10 +131,10 @@ public class CdpBrowser : Browser
     public override Task<CookieParam[]> CookiesAsync() => DefaultContext.CookiesAsync();
 
     /// <inheritdoc/>
-    public override Task SetCookie(CookieParam[] cookies) => DefaultContext.SetCookie(cookies);
+    public override Task SetCookieAsync(CookieParam[] cookies) => DefaultContext.SetCookieAsync(cookies);
 
     /// <inheritdoc/>
-    public override Task DeleteCookie(CookieParam[] cookies) => DefaultContext.DeleteCookie(cookies);
+    public override Task DeleteCookieAsync(CookieParam[] cookies) => DefaultContext.DeleteCookieAsync(cookies);
 
     /// <inheritdoc/>
     public override async Task<IBrowserContext> CreateBrowserContextAsync(BrowserContextOptions options = null)
