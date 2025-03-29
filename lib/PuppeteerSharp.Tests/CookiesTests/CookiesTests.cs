@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using NUnit.Framework;
 using PuppeteerSharp.Nunit;
 
@@ -203,6 +204,140 @@ namespace PuppeteerSharp.Tests.CookiesTests
             });
 
             Assert.That(await Page.GetCookiesAsync("https://foo.com/some_path_looks_like_nested"), Is.Empty);
+        }
+
+        [Test, Retry(2), PuppeteerTest("cookies.spec", "Cookie specs BrowserContext.cookies", "should find no cookies in new context")]
+        public async Task ShouldFindNoCookiesInNewContext()
+        {
+            var context = await Browser.CreateBrowserContextAsync();
+            Assert.That(await context.CookiesAsync(), Is.Empty);
+        }
+
+        [Test, Retry(2), PuppeteerTest("cookies.spec", "Cookie specs BrowserContext.cookies", "should find cookie created in page")]
+        public async Task ShouldFindCookieCreatedInPage()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage);
+
+            await Page.EvaluateExpressionAsync("document.cookie = 'infoCookie = secret'");
+            var cookies = await Context.CookiesAsync();
+            Assert.That(cookies, Has.Exactly(1).Items);
+            var cookie = cookies.First();
+            Assert.That(cookie.Name, Is.EqualTo("infoCookie"));
+            Assert.That(cookie.Value, Is.EqualTo("secret"));
+            Assert.That(cookie.Domain, Is.EqualTo("localhost"));
+            Assert.That(cookie.Path, Is.EqualTo("/"));
+            Assert.That(cookie.SameParty, Is.EqualTo(false));
+            Assert.That(cookie.Expires, Is.EqualTo(-1));
+            Assert.That(cookie.Size, Is.EqualTo(16));
+            Assert.That(cookie.HttpOnly, Is.False);
+            Assert.That(cookie.Secure, Is.False);
+            Assert.That(cookie.Session, Is.True);
+            Assert.That(cookie.SourceScheme, Is.EqualTo(CookieSourceScheme.NonSecure));
+        }
+
+        [Test, Retry(2), PuppeteerTest("cookies.spec", "Cookie specs BrowserContext.setCookie", "should set with undefined partition key")]
+        public async Task ShouldSetWithUndefinedPartitionKey()
+        {
+            await Context.SetCookieAsync([
+                new CookieParam()
+                {
+                    Name = "infoCookie",
+                    Value = "secret",
+                    Domain = "localhost",
+                    Path = "/",
+                    SameParty = false,
+                    Expires = -1,
+                    Size = 16,
+                    HttpOnly = false,
+                    Secure = false,
+                    Session = true,
+                    SourceScheme = CookieSourceScheme.NonSecure,
+                },
+            ]);
+
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            Assert.That(await Page.EvaluateExpressionAsync<string>("document.cookie"), Is.EqualTo("infoCookie=secret"));
+        }
+
+        [Test, Retry(2), PuppeteerTest("cookies.spec", "Cookie specs BrowserContext.setCookie", "should set cookie with string partition key")]
+        public async Task ShouldSetCookieWithStringPartitionKey()
+        {
+            await Context.SetCookieAsync([
+                new CookieParam()
+                {
+                    Name = "infoCookie",
+                    Value = "secret",
+                    Domain = "localhost",
+                    Path = "/",
+                    SameParty = false,
+                    Expires = -1,
+                    Size = 16,
+                    HttpOnly = false,
+                    Secure = false,
+                    Session = true,
+                    PartitionKey = "https://localhost:8000",
+                    SourceScheme = CookieSourceScheme.NonSecure,
+                },
+            ]);
+
+            await Page.GoToAsync(TestConstants.EmptyPage);
+            Assert.That(await Page.EvaluateExpressionAsync<string>("document.cookie"), Is.EqualTo("infoCookie=secret"));
+        }
+
+        [Test, Retry(2), PuppeteerTest("cookies.spec", "Cookie specs BrowserContext.deleteCookies", "should delete cookies")]
+        public async Task ShouldDeleteCookies()
+        {
+            await Page.GoToAsync(TestConstants.EmptyPage);
+
+            await Context.SetCookieAsync([
+                new CookieParam()
+                {
+                    Name = "cookie1",
+                    Value = "1",
+                    Domain = "localhost",
+                    Path = "/",
+                    SameParty = false,
+                    Expires = -1,
+                    Size = 16,
+                    HttpOnly = false,
+                    Secure = false,
+                    Session = true,
+                    SourceScheme = CookieSourceScheme.NonSecure,
+                },
+                new CookieParam()
+                {
+                    Name = "cookie2",
+                    Value = "2",
+                    Domain = "localhost",
+                    Path = "/",
+                    SameParty = false,
+                    Expires = -1,
+                    Size = 16,
+                    HttpOnly = false,
+                    Secure = false,
+                    Session = true,
+                    SourceScheme = CookieSourceScheme.NonSecure,
+                },
+            ]);
+            Assert.That(await Page.EvaluateExpressionAsync<string>("document.cookie"), Is.EqualTo("cookie1=1; cookie2=2"));
+
+            await Context.DeleteCookieAsync([
+                new CookieParam()
+                {
+                    Name = "cookie1",
+                    Value = "1",
+                    Domain = "localhost",
+                    Path = "/",
+                    SameParty = false,
+                    Expires = -1,
+                    Size = 16,
+                    HttpOnly = false,
+                    Secure = false,
+                    Session = true,
+                    SourceScheme = CookieSourceScheme.NonSecure,
+                },
+            ]);
+            Assert.That(await Page.EvaluateExpressionAsync<string>("document.cookie"), Is.EqualTo("cookie2=2"));
         }
     }
 }
