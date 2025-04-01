@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using NUnit.Framework;
 using PuppeteerSharp.Nunit;
 
@@ -262,26 +261,25 @@ namespace PuppeteerSharp.Tests.CookiesTests
         [Test, Retry(2), PuppeteerTest("cookies.spec", "Cookie specs BrowserContext.setCookie", "should set cookie with string partition key")]
         public async Task ShouldSetCookieWithStringPartitionKey()
         {
-            await Context.SetCookieAsync([
+            var options = TestConstants.DefaultBrowserOptions();
+            options.AcceptInsecureCerts = true;
+
+            await using var browser = await Puppeteer.LaunchAsync(options, TestConstants.LoggerFactory);
+            var page = await browser.NewPageAsync();
+
+            await browser.DefaultContext.SetCookieAsync([
                 new CookieParam()
                 {
                     Name = "infoCookie",
                     Value = "secret",
                     Domain = "localhost",
-                    Path = "/",
-                    SameParty = false,
-                    Expires = -1,
-                    Size = 16,
-                    HttpOnly = false,
-                    Secure = false,
-                    Session = true,
-                    PartitionKey = "https://localhost:8000",
-                    SourceScheme = CookieSourceScheme.NonSecure,
+                    Secure = true,
+                    PartitionKey = "https://localhost",
                 },
             ]);
 
-            await Page.GoToAsync(TestConstants.EmptyPage);
-            Assert.That(await Page.EvaluateExpressionAsync<string>("document.cookie"), Is.EqualTo("infoCookie=secret"));
+            await page.GoToAsync($"{TestConstants.HttpsPrefix}/empty.html");
+            Assert.That(await page.EvaluateExpressionAsync<string>("document.cookie"), Is.EqualTo("infoCookie=secret"));
         }
 
         [Test, Retry(2), PuppeteerTest("cookies.spec", "Cookie specs BrowserContext.deleteCookies", "should delete cookies")]
